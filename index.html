@@ -52,7 +52,7 @@
         #no-btn {
             background-color: #ff7675;
             color: white;
-            position: relative; /* Starts normal, becomes fixed when moving */
+            position: relative; 
         }
         
         /* Full screen overlay for the cute threat */
@@ -62,7 +62,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 0, 0, 0.85);
+            background-color: rgba(0, 0, 0, 0.9);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -79,7 +79,7 @@
 <body>
 
     <div id="main-container">
-        <h1>Are you free for a date this weekend?</h1>
+        <h1>Douae , atkoni ghda fsbah frabat?</h1>
         <img src="https://media.giphy.com/media/26FPCXdkvDbKBbgOI/giphy.gif" alt="Cute please gif">
         
         <div class="buttons">
@@ -89,14 +89,14 @@
     </div>
 
     <div id="success-container" class="hidden">
-        <h1>Yay! It's a date! ❤️</h1>
-        <p>I'll pick you up at 8.</p>
+        <h1>Yay! It's a date 😂! ❤️</h1>
+        <p>I can't wait.</p>
         <img src="https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif" alt="Happy gif">
     </div>
 
     <div id="warning-overlay" class="hidden">
-        <h1>Stop trying to click no... 🔪🐱</h1>
-        <img src="https://media.giphy.com/media/l1J3pT7PfLgSRMnJ6/giphy.gif" alt="Cute angry gif">
+        <h1>Stop trying to click no... 🔪</h1>
+        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3RodzY3NWhldnAxcDF4M2M5MHdzcWhpYWNuaTRsem8zYW1wNGl0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/901mxGLGQN2PyCQpoc/giphy.gif" alt="Cute angry gif" style="width: 300px;">
     </div>
 
     <script>
@@ -109,7 +109,11 @@
         const warningOverlay = document.getElementById('warning-overlay');
 
         const dodgeOrThreaten = (e) => {
-            e.preventDefault(); 
+            // Prevent default touch behavior so she can't just tap it easily on mobile
+            if (e.type === 'touchstart') {
+                e.preventDefault();
+            }
+            
             escapeCount++;
 
             // If she tries more than 3 times (on the 4th attempt)
@@ -120,16 +124,16 @@
                 // Hide it after 3.5 seconds and reset so she can finally click Yes
                 setTimeout(() => {
                     warningOverlay.classList.add('hidden');
-                    escapeCount = 0; // Reset count
+                    escapeCount = 0; 
                     
-                    // Put the "No" button back to its original spot to tease her again
+                    // Put the "No" button back to its original spot
                     noBtn.style.position = 'relative';
                     noBtn.style.left = 'auto';
                     noBtn.style.top = 'auto';
                 }, 3500);
 
             } else {
-                // Standard dodge behavior
+                // Move the button away!
                 noBtn.style.position = 'fixed';
                 
                 // Calculate random bounds safely within the window
