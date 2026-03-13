@@ -15,7 +15,7 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             margin: 0;
-            overflow: hidden; /* Keeps the button from expanding the screen */
+            overflow: hidden; 
         }
         h1 {
             color: #d63031;
@@ -23,7 +23,7 @@
             padding: 0 20px;
         }
         img {
-            width: 200px;
+            width: 250px;
             border-radius: 15px;
             margin-bottom: 30px;
         }
@@ -31,77 +31,127 @@
             position: relative;
             width: 100%;
             height: 100px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
         button {
             font-size: 1.2rem;
-            padding: 10px 20px;
+            padding: 10px 30px;
             border: none;
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
             transition: transform 0.1s;
+            z-index: 10;
         }
         #yes-btn {
             background-color: #55efc4;
             color: #2d3436;
-            margin-right: 15px;
         }
         #no-btn {
             background-color: #ff7675;
             color: white;
-            position: absolute;
+            position: relative; /* Starts normal, becomes fixed when moving */
         }
+        
+        /* Full screen overlay for the cute threat */
+        #warning-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+        }
+
         .hidden {
-            display: none;
+            display: none !important;
         }
     </style>
 </head>
 <body>
 
     <div id="main-container">
-        <h1>Are you ready to admit I'm the funniest person you know?</h1>
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjEx...YOUR_GIF_HERE.../giphy.gif" alt="Cute gif">
+        <h1>Are you free for a date this weekend?</h1>
+        <img src="https://media.giphy.com/media/26FPCXdkvDbKBbgOI/giphy.gif" alt="Cute please gif">
         
         <div class="buttons">
-            <button id="yes-btn">Yes, obviously</button>
-            <button id="no-btn">No way</button>
+            <button id="yes-btn">Yes!</button>
+            <button id="no-btn">No</button>
         </div>
     </div>
 
     <div id="success-container" class="hidden">
-        <h1>I knew it! ❤️</h1>
-        <p>You're pretty awesome too.</p>
+        <h1>Yay! It's a date! ❤️</h1>
+        <p>I'll pick you up at 8.</p>
         <img src="https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif" alt="Happy gif">
     </div>
 
+    <div id="warning-overlay" class="hidden">
+        <h1>Stop trying to click no... 🔪🐱</h1>
+        <img src="https://media.giphy.com/media/l1J3pT7PfLgSRMnJ6/giphy.gif" alt="Cute angry gif">
+    </div>
+
     <script>
+        let escapeCount = 0;
+        
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
         const mainContainer = document.getElementById('main-container');
         const successContainer = document.getElementById('success-container');
+        const warningOverlay = document.getElementById('warning-overlay');
 
-        // Function to move the button
-        const moveButton = () => {
-            // Get viewport dimensions
-            const x = Math.random() * (window.innerWidth - noBtn.clientWidth - 20);
-            const y = Math.random() * (window.innerHeight - noBtn.clientHeight - 20);
-            
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
+        const dodgeOrThreaten = (e) => {
+            e.preventDefault(); 
+            escapeCount++;
+
+            // If she tries more than 3 times (on the 4th attempt)
+            if (escapeCount > 3) {
+                // Show the threatening overlay
+                warningOverlay.classList.remove('hidden');
+                
+                // Hide it after 3.5 seconds and reset so she can finally click Yes
+                setTimeout(() => {
+                    warningOverlay.classList.add('hidden');
+                    escapeCount = 0; // Reset count
+                    
+                    // Put the "No" button back to its original spot to tease her again
+                    noBtn.style.position = 'relative';
+                    noBtn.style.left = 'auto';
+                    noBtn.style.top = 'auto';
+                }, 3500);
+
+            } else {
+                // Standard dodge behavior
+                noBtn.style.position = 'fixed';
+                
+                // Calculate random bounds safely within the window
+                const maxX = window.innerWidth - noBtn.clientWidth - 20;
+                const maxY = window.innerHeight - noBtn.clientHeight - 20;
+                
+                const x = Math.max(10, Math.random() * maxX);
+                const y = Math.max(10, Math.random() * maxY);
+                
+                noBtn.style.left = `${x}px`;
+                noBtn.style.top = `${y}px`;
+            }
         };
 
-        // Move on hover (for desktop) and touch (for mobile)
-        noBtn.addEventListener('mouseover', moveButton);
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Prevents the actual tap from registering
-            moveButton();
-        });
+        // Triggers for both desktop mice and mobile tapping
+        noBtn.addEventListener('mouseover', dodgeOrThreaten);
+        noBtn.addEventListener('touchstart', dodgeOrThreaten);
 
-        // What happens when she clicks Yes
+        // Success condition
         yesBtn.addEventListener('click', () => {
             mainContainer.classList.add('hidden');
             successContainer.classList.remove('hidden');
-            // Optional: You could trigger a confetti library here!
         });
     </script>
 </body>
