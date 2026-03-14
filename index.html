@@ -95,18 +95,37 @@
     </div>
 
     <div id="warning-overlay" class="hidden">
-        <h1>Stop trying to click no... 🔪</h1>
-        <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3RodzY3NWhldnAxcDF4M2M5MHdzcWhpYWNuaTRsem8zYW1wNGl0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/901mxGLGQN2PyCQpoc/giphy.gif" alt="Cute angry gif" style="width: 300px;">
+        <h1 id="warning-text">Stop trying to click no... 🔪</h1>
+        <img id="warning-img" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3RodzY3NWhldnAxcDF4M2M5MHdzcWhpYWNuaTRsem8zYW1wNGl0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/901mxGLGQN2PyCQpoc/giphy.gif" alt="Cute angry gif" style="width: 300px;">
     </div>
 
     <script>
         let escapeCount = 0;
+        let threatIndex = 0; // Keeps track of which GIF to show
         
+        // The list of messages and GIFs!
+        const threats = [
+            {
+                text: "Stop trying to click no... 🔪",
+                img: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3RodzY3NWhldnAxcDF4M2M5MHdzcWhpYWNuaTRsem8zYW1wNGl0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/901mxGLGQN2PyCQpoc/giphy.gif"
+            },
+            {
+                text: "I said YES! Don't make me punch you! 🥊😾",
+                img: "https://media1.tenor.com/m/KUv0IXThX3cAAAAC/getyoahhpunched-cat.gif"
+            },
+            {
+                text: "Are you serious right meow?! Just click yes! 😼",
+                img: "https://media1.tenor.com/m/qAd9rGHQhQQAAAAd/silly-cat-cat.gif"
+            }
+        ];
+
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
         const mainContainer = document.getElementById('main-container');
         const successContainer = document.getElementById('success-container');
         const warningOverlay = document.getElementById('warning-overlay');
+        const warningText = document.getElementById('warning-text');
+        const warningImg = document.getElementById('warning-img');
 
         const dodgeOrThreaten = (e) => {
             // Prevent default touch behavior so she can't just tap it easily on mobile
@@ -118,8 +137,16 @@
 
             // If she tries more than 3 times (on the 4th attempt)
             if (escapeCount > 3) {
+                // Update the text and image based on our current threat index
+                warningText.innerText = threats[threatIndex].text;
+                warningImg.src = threats[threatIndex].img;
+
                 // Show the threatening overlay
                 warningOverlay.classList.remove('hidden');
+                
+                // Move to the next threat for next time. 
+                // The % threats.length makes it loop back to the first one after the last!
+                threatIndex = (threatIndex + 1) % threats.length; 
                 
                 // Hide it after 3.5 seconds and reset so she can finally click Yes
                 setTimeout(() => {
