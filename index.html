@@ -174,13 +174,42 @@
             mainContainer.classList.add('hidden');
             successContainer.classList.remove('hidden');
             
-            // This code creates a massive burst of confetti from the center!
-            confetti({
-                particleCount: 150,
-                spread: 100,
-                origin: { y: 0.6 },
-                colors: ['#ff7675', '#55efc4', '#ffe6e6', '#d63031']
-            });
+            // Set how long the confetti lasts (3 seconds)
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+
+            // The colors for the confetti
+            const colors = ['#ff7675', '#55efc4', '#ff9ff3', '#feca57', '#d63031'];
+
+            // Create an interval that fires confetti every 250ms
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval); // Stop firing when time is up
+                }
+
+                // As time runs out, fire fewer particles for a natural slow-down effect
+                const particleCount = 50 * (timeLeft / duration);
+                
+                // Fire from the left edge 
+                confetti({
+                    particleCount: particleCount,
+                    angle: 60, // Aiming up and right
+                    spread: 55,
+                    origin: { x: 0, y: 1 }, // Bottom left corner
+                    colors: colors
+                });
+                
+                // Fire from the right edge
+                confetti({
+                    particleCount: particleCount,
+                    angle: 120, // Aiming up and left
+                    spread: 55,
+                    origin: { x: 1, y: 1 }, // Bottom right corner
+                    colors: colors
+                });
+            }, 250);
         });
     </script>
 </body>
