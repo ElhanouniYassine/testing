@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For You!</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
         body {
             display: flex;
@@ -55,7 +58,6 @@
             position: relative; 
         }
         
-        /* Full screen overlay for the cute threat */
         #warning-overlay {
             position: fixed;
             top: 0;
@@ -101,20 +103,19 @@
 
     <script>
         let escapeCount = 0;
-        let threatIndex = 0; // Keeps track of which GIF to show
+        let threatIndex = 0; 
         
-        // The list of messages and GIFs!
         const threats = [
             {
-                text: "Stop trying to click no... 🔪",
+                text: "matbrkich 3la no... 🔪",
                 img: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc3RodzY3NWhldnAxcDF4M2M5MHdzcWhpYWNuaTRsem8zYW1wNGl0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/901mxGLGQN2PyCQpoc/giphy.gif"
             },
             {
-                text: "I said YES! Don't make me punch you! 🥊😾",
+                text: "imkn bghiti tbrki 3la yes gha nssiti YK 🥊😾",
                 img: "https://media1.tenor.com/m/KUv0IXThX3cAAAAC/getyoahhpunched-cat.gif"
             },
             {
-                text: "Are you serious right meow?! Just click yes! 😼",
+                text: "GHANHAKILIK TELEPHONE ILA MABRKTICH 3LA YES 😼",
                 img: "https://media1.tenor.com/m/qAd9rGHQhQQAAAAd/silly-cat-cat.gif"
             }
         ];
@@ -128,42 +129,32 @@
         const warningImg = document.getElementById('warning-img');
 
         const dodgeOrThreaten = (e) => {
-            // Prevent default touch behavior so she can't just tap it easily on mobile
             if (e.type === 'touchstart') {
                 e.preventDefault();
             }
             
             escapeCount++;
 
-            // If she tries more than 3 times (on the 4th attempt)
             if (escapeCount > 3) {
-                // Update the text and image based on our current threat index
                 warningText.innerText = threats[threatIndex].text;
                 warningImg.src = threats[threatIndex].img;
 
-                // Show the threatening overlay
                 warningOverlay.classList.remove('hidden');
                 
-                // Move to the next threat for next time. 
-                // The % threats.length makes it loop back to the first one after the last!
                 threatIndex = (threatIndex + 1) % threats.length; 
                 
-                // Hide it after 3.5 seconds and reset so she can finally click Yes
                 setTimeout(() => {
                     warningOverlay.classList.add('hidden');
                     escapeCount = 0; 
                     
-                    // Put the "No" button back to its original spot
                     noBtn.style.position = 'relative';
                     noBtn.style.left = 'auto';
                     noBtn.style.top = 'auto';
                 }, 3500);
 
             } else {
-                // Move the button away!
                 noBtn.style.position = 'fixed';
                 
-                // Calculate random bounds safely within the window
                 const maxX = window.innerWidth - noBtn.clientWidth - 20;
                 const maxY = window.innerHeight - noBtn.clientHeight - 20;
                 
@@ -175,14 +166,21 @@
             }
         };
 
-        // Triggers for both desktop mice and mobile tapping
         noBtn.addEventListener('mouseover', dodgeOrThreaten);
         noBtn.addEventListener('touchstart', dodgeOrThreaten);
 
-        // Success condition
+        // 🎇 HERE IS WHERE WE FIRE THE CONFETTI WHEN SHE CLICKS YES
         yesBtn.addEventListener('click', () => {
             mainContainer.classList.add('hidden');
             successContainer.classList.remove('hidden');
+            
+            // This code creates a massive burst of confetti from the center!
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#ff7675', '#55efc4', '#ffe6e6', '#d63031']
+            });
         });
     </script>
 </body>
